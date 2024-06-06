@@ -1,0 +1,19 @@
+version: '3.7'
+# Command: docker-compose -f mongo/docker-compose.yml up -d
+
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - '27017:27017'
+    volumes:
+      # - mongodb_data:/data/db
+      - ./data:/data/db
+    networks:
+      - mongodb_network
+
+networks:
+  mongodb_network:
+# volumes:
+#   mongodb_data:

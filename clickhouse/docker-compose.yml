@@ -1,0 +1,34 @@
+version: '3.7'
+# Command: docker-compose -f clickhouse/docker-compose.yml up -d
+
+services:
+  clickhouse:
+    image: clickhouse/clickhouse-server
+    container_name: clickhouse
+    volumes:
+      - ./data/ch_data:/var/lib/clickhouse/
+      - ./data/ch_logs:/var/log/clickhouse-server/
+    ports:
+      - '18123:8123'
+      - '19000:9000'
+    environment:
+      - CLICKHOUSE_USER=clickhouse
+      - CLICKHOUSE_PASSWORD=clickhouse
+    ulimits:
+      nofile:
+        soft: 262144
+        hard: 262144
+    networks:
+      - clickhouse_network
+  ch-ui:
+    depends_on:
+      - clickhouse
+    image: ghcr.io/caioricciuti/ch-ui:latest
+    container_name: ch-ui
+    ports:
+      - '5521:5521'
+    networks:
+      - clickhouse_network
+
+networks:
+  clickhouse_network:
